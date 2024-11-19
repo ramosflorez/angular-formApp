@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ValidatorService } from '../../../shared/service/validators.service';
 
 const rtx5090 = {
   name: 'RTX 5090',
@@ -14,17 +15,6 @@ const rtx5090 = {
 })
 export class BasicPageComponent implements OnInit {
 
-
-
-  // public myform: FormGroup = new FormGroup(
-  //   {
-  //     name: new FormControl(''),
-  //     price: new FormControl(0),
-  //     inStorage: new FormControl(0)
-  //   }
-  // );
-
-
   public myform: FormGroup = this.fb.group(
     {
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -33,15 +23,17 @@ export class BasicPageComponent implements OnInit {
     }
   );
 
-  constructor( private fb: FormBuilder) { }
+  constructor(
+    private fb: FormBuilder,
+    private validatorsService: ValidatorService
+  ) { }
   ngOnInit(): void {
     // this.myform.reset(rtx5090);
   }
-
   isValidField(field: string) {
-    return this.myform.controls[field].errors
-    && this.myform.controls[field].touched;
+    return this.validatorsService.isValidField(this.myform, field);
   }
+
   getFieldsErrors(field: string): string  | null{
     if(!this.myform.controls[field]) return null;
 
